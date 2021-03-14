@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,20 +13,19 @@ export class AppComponent implements OnInit {
   //This is how we turn off type safety. Users can be anything.
   users: any;
 
-  //Http service to make this request
-  constructor(private http: HttpClient) { }
+  //Http service to make this request. Bring account service in here as well.
+  constructor(private accountService: AccountService) { }
 
   //Implement OnInit
   ngOnInit() {
-    this.getUsers();
+
+    //Call Set current user from the service
+    this.setCurrentUser();
   }
 
-  getUsers() {
-    //We must add subscribe to get our data and know what to do after data retrieved.
-    this.http.get('https://localhost:5001/api/users').subscribe(response => {
-      this.users = response;
-    }, error => {
-      console.log(error);
-    });
+  setCurrentUser() {
+    //Parse to get JSON out of stringified form into user object here.
+    const user: User = JSON.parse(localStorage.getItem('user'))
+    this.accountService.setCurrentUser(user);
   }
 }
