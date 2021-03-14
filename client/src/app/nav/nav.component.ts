@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccountService } from '../_services/account.service';
 import { User } from '../_models/user';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -16,8 +18,8 @@ export class NavComponent implements OnInit {
   //Bool is false by default
   //loggedIn: boolean;
 
-  //Injecting service here
-  constructor(public accountService: AccountService) { }
+  //Injecting service here. Injecting router here.
+  constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
 
@@ -29,15 +31,22 @@ export class NavComponent implements OnInit {
   login() {
     //Call the service
     this.accountService.login(this.model).subscribe(response => {
-      console.log(response);
+
+      //Send user to members area
+      this.router.navigateByUrl('/members');
+
       //this.loggedIn = true;
     }, error => {
-      console.log(error);
+      //Output toastr
+      this.toastr.error(error.error);
     });
   }
 
   logout() {
     this.accountService.logout();
+
+    //Send user to home page after logout.
+    this.router.navigateByUrl('/');
     //this.loggedIn = false;
   }
 
