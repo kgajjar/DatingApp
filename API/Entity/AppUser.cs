@@ -11,5 +11,9 @@ namespace API.Entity
 
         //Name accordingly as we will use Identity later on
         public string UserName { get; set; }
+
+        public byte[] PasswordHash { get; set; }
+
+        public byte[] PasswordSalt { get; set; }
     }
 }
