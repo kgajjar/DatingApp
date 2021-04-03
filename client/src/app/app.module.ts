@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,9 @@ import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './_modules/shared.module';
+import { ErrorInterceptor } from './_interceptor/error.interceptor';
+import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,9 @@ import { SharedModule } from './_modules/shared.module';
     MemberListComponent,
     MemberDetailComponent,
     ListsComponent,
-    MessagesComponent
+    MessagesComponent,
+    TestErrorsComponent,
+    ServerErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,8 @@ import { SharedModule } from './_modules/shared.module';
     SharedModule
 
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true/*multi:true means we don't want to replace existing interceptors. We want to add to the built in ones.*/ }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
