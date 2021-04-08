@@ -1,5 +1,8 @@
 ﻿using API.Data;
+using API.DTOs;
 using API.Entity;
+using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,32 +13,43 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
-        public UsersController(DataContext context)
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         //Get all Users
         [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
-            //return await _context.Users.ToList(); 
             //Below we have to use async version of ToList
-            return await _context.Users.ToListAsync();
+            var users = await _userRepository.GetUsersAsync();
+
+            //Map to DTO
+            //Source: users
+            //Output: <IEnumerable<MemberDto>>
+
+            var UsersToReturn = _mapper.Map<IEnumerable<MemberDto>>(users);
+            //Wrap result in an OK response
+            return Ok(UsersToReturn);
         }
 
         //Get specific User
         //api/users/3
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<AppUser>> GetUser(int id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            //FindAsync method rather than Find
-            return await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            //FindAsync method rather than Find. Map
+            return _mapper.Map<MemberDto>(user);
         }
     }
 }
