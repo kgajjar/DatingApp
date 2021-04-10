@@ -23,7 +23,7 @@ const routes: Routes = [
       //We added our authgaurd below. Add it per link you want to protect.
       { path: 'members', component: MemberListComponent },
       //We have a placeholder here
-      { path: 'members/:id', component: MemberDetailComponent },
+      { path: 'members/:username', component: MemberDetailComponent },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent }
     ]

@@ -17,7 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   //Adding Toast: So we can display Toastr notifcation
   constructor(private router: Router, private toastr: ToastrService) { }
 
-  //Here we ca do 2 things:
+  //Here we can do 2 things:
   //1) We can intercept the request that goes out
   //2) Or we can intercept the response that comes back in the (next) param below which handles the response that comes out.
   intercept(request: HttpRequest<unknown>, next: HttpHandler): /*This is what we get back*/Observable<HttpEvent<unknown>> {
