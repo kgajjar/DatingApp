@@ -1,0 +1,97 @@
+<!--Check if member exists before we display him as the data from api might have not been returned from API yet-->
+<div class="row" *ngIf="member">
+  <div class="col-4">
+    <h1>Your profile</h1>
+  </div>
+  <div class="col-8">
+    <!--Notification for profile update-->
+    <div class="alert alert-info" *ngIf="editForm.dirty">
+      <!--Only show if form is dirty (changes made to form)-->
+      <strong>Information: </strong> You have made changes. Any unsaved changes will be lost.
+    </div>
+  </div>
+  <div class="col-4">
+    <!--If no photo uploaded, then reference dummy user picture-->
+    <img src="{{member.photoUrl || './assets/user.png'}}"
+         class="card-img-top img-thumbnail" alt="{{member.knownAs}}" />
+    <div class="card-body">
+      <div>
+        <strong>Location: </strong>
+        <p>{{member.city}}, {{member.country}}</p>
+      </div>
+      <div>
+        <strong>Age: </strong>
+        <p>{{member.age}}</p>
+      </div>
+      <div>
+        <strong>Member Since: </strong>
+        <p>{{member.city}}</p>
+      </div>
+      <div>
+        <strong>Location: </strong>
+        <p>{{member.created}}</p>
+      </div>
+      <div>
+        <strong>Last Active: </strong>
+        <p>{{member.lastActive}}</p>
+      </div>
+    </div>
+    <div class="card-footer">
+      <!--Link this button to form by giving it a form property-->
+      <!--Example: <button form="editForm"/>-->
+      <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
+    </div>
+  </div>
+  <div class="col-8">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About {{member.knownAs}}</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="interests-tab" data-toggle="tab" href="#interests" role="tab" aria-controls="interests" aria-selected="false">Interests</a>
+      </li>
+    </ul>
+    <div class="tab-content member-tabset" id="memberTabContent">
+      <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+        <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()">
+          <!--Description-->
+          <h4>Description</h4>
+          <!--2 way binding here-->
+          <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6">
+          </textarea>
+
+          <!--Looking for-->
+          <h4 class="mt-2">Looking for</h4>
+          <textarea class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6">
+          </textarea>
+
+          <!--Interests-->
+          <h4 class="mt-2">Interests</h4>
+          <textarea class="form-control" [(ngModel)]="member.interests" name="interests" rows="6">
+          </textarea>
+
+          <h4 class="mt-2">Location Details</h4>
+          <!--Location Details-->
+          <div class="form-inline">
+            <!--City-->
+            <label for="city">
+              City:
+            </label>
+            <input [(ngModel)]="member.city" type="text" name="city" class="form-control mx-2" />
+
+            <!--Country-->
+            <label for="country">
+              Country:
+            </label>
+            <input [(ngModel)]="member.country" type="text" name="country" class="form-control mx-2" />
+          </div>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="interests" role="tabpanel" aria-labelledby="interests-tab">
+        <h4>Description</h4>
+        <p>{{member.interests}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+

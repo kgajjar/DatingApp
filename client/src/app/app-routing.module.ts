@@ -9,6 +9,8 @@ import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_gaurds/auth.guard';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PreventUnsavedChangesGuard } from './_gaurds/prevent-unsaved-changes.guard';
 
 const routes: Routes = [
   //The root will load home component
@@ -21,6 +23,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       //We added our authgaurd below. Add it per link you want to protect.
+      //Dont add a (s) on end as this will confuse Angular with the current members route.
+      { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]},
       { path: 'members', component: MemberListComponent },
       //We have a placeholder here
       { path: 'members/:username', component: MemberDetailComponent },
