@@ -21,6 +21,8 @@ namespace API.Helpers
                 src.Photos.FirstOrDefault(x => x.IsMain).Url));
             CreateMap<Photo, PhotoDto>();
 
+            CreateMap<MemberUpdateDto, AppUser>();
+
             //This is added to ApplicationServiceExtensions
         }
     }

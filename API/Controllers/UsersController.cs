@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -50,6 +51,35 @@ namespace API.Controllers
 
             //FindAsync method rather than Find. Map
             return _mapper.Map<MemberDto>(user);
+        }
+
+        //Update user
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
+        {
+            //Get hold of the username from the token, not by username as we cant trust this.
+            //as someone could have stolen the token and trying to use it to update a user.
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            //Get user from DB
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            //Map the input Dto to our User class
+            _mapper.Map(memberUpdateDto, user);
+
+            //User object is flagged as being updated by Entity Framework
+            _userRepository.Update(user);
+
+            //Persist changes to DB
+            if (await _userRepository.SaveAllAsync())
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest("Failed to update user.");
+            }
+
         }
     }
 }
