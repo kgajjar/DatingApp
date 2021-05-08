@@ -18,7 +18,7 @@ namespace API
         //Make this async
         public static async Task Main(string[] args)//All below happens before application starts running. Here we are outside our middleware
         {
-            //Assigning CreateHostBuilder(args).Build().Run() to variable called host. Remove .Run ofr this. We add it last.
+            //Assigning CreateHostBuilder(args).Build().Run() to variable called host. Removed .Run function for this. We add it last.
             var host = CreateHostBuilder(args).Build();
 
             //Get our DataContext service so we can pass it to our Seed method
